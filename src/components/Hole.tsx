@@ -9,7 +9,21 @@ interface HoleProps {
   isActive: boolean;
 }
 
+// ...existing code...
 export const Hole: React.FC<HoleProps> = ({ index, pebbles, onClick, isActive }) => {
+  const gradientOptions = [
+    'from-pink-500 via-red-500 to-yellow-500',
+    'from-purple-500 via-indigo-500 to-blue-500',
+    'from-green-400 via-teal-500 to-cyan-500',
+    'from-yellow-400 via-orange-500 to-red-500',
+  ];
+
+  // Simple deterministic pseudo-random function
+  function seededRandom(seed: number) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+
   return (
     <div
       onClick={isActive ? () => onClick(index) : undefined}
@@ -18,9 +32,20 @@ export const Hole: React.FC<HoleProps> = ({ index, pebbles, onClick, isActive })
         shadow-inner overflow-hidden cursor-pointer transition-transform 
         ${isActive ? 'ring-4 ring-yellow-400 scale-105' : ''}`}
     >
-      {Array.from({ length: pebbles }).map((_, i) => (
-        <Pebble key={i} />
-      ))}
+      {Array.from({ length: pebbles }).map((_, i) => {
+        const seed = index * 100 + i;
+        const gradient = gradientOptions[Math.floor(seededRandom(seed) * gradientOptions.length)];
+        const offsetX = (seededRandom(seed + 1) - 0.5) * 4;
+        const offsetY = (seededRandom(seed + 2) - 0.5) * 4;
+        return (
+          <Pebble
+            key={i}
+            gradient={gradient}
+            offsetX={offsetX}
+            offsetY={offsetY}
+          />
+        );
+      })}
     </div>
   );
 };
