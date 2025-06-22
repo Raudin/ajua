@@ -16,7 +16,7 @@ export default function AIPage() {
             setSubmitted(true);
           }}
         >
-          <label className="text-white">
+          <label className="text-white gamer-font">
             Your Name:
             <input
               className="ml-2 px-2 py-1 rounded"
@@ -27,7 +27,7 @@ export default function AIPage() {
           </label>
           <button
             type="submit"
-            className="mt-2 px-4 py-2 bg-green-600 text-white rounded"
+            className="mt-2 px-4 py-2 bg-green-600 text-white rounded gamer-font"
           >
             Start Game
           </button>

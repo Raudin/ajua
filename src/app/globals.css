@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@700&display=swap');
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+.gamer-font {
+  font-family: 'Press Start 2P', 'Orbitron', Arial, sans-serif;
 }
 
 @theme inline {
