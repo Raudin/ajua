@@ -6,14 +6,19 @@ import { getAIMove} from '../utils/aiPlayer';
 
 interface AjuaGameProps {
   mode: 'multiplayer' | 'ai';
+  playerNames?: [string, string];
 }
 
-export const AjuaGame: React.FC<AjuaGameProps> = ({ mode }) => {
+export const AjuaGame: React.FC<AjuaGameProps> = ({ mode, playerNames }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
   const handleSow = (holeIndex: number) => {
     dispatch({ type: 'sow', holeIndex });
   };
+
+  const player1 = playerNames?.[0] || "Player 1";
+const player2 = playerNames?.[1] || "Player 2";
+// Use player1 and player2 in your status and UI
 
   React.useEffect(() => {
     if (mode === 'ai' && !state.gameOver && state.currentPlayer === 1) {
@@ -28,7 +33,7 @@ export const AjuaGame: React.FC<AjuaGameProps> = ({ mode }) => {
     <div className="flex flex-col items-center gap-6">
       <h1 className="text-4xl font-extrabold text-white drop-shadow-md">AJUA</h1>
       <div className="text-lg text-white font-medium">
-        {state.status}
+        {state.status.replace("Player 1", player1).replace("Player 2", player2)}
       </div>
 
       {/* 🪵 Board Container */}
