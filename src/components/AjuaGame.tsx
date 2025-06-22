@@ -4,9 +4,12 @@ import { Bank } from './Bank';
 import { gameReducer, initialState } from '../utils/gameReducer';
 import { getAIMove} from '../utils/aiPlayer';
 
-export const AjuaGame: React.FC = () => {
+interface AjuaGameProps {
+  mode: 'multiplayer' | 'ai';
+}
+
+export const AjuaGame: React.FC<AjuaGameProps> = ({ mode }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
-  const [mode, setMode] = React.useState<'multiplayer' | 'ai'>('multiplayer');
 
   const handleSow = (holeIndex: number) => {
     dispatch({ type: 'sow', holeIndex });
@@ -26,10 +29,6 @@ export const AjuaGame: React.FC = () => {
       <h1 className="text-4xl font-extrabold text-white drop-shadow-md">AJUA</h1>
       <div className="text-lg text-white font-medium">
         {state.status}
-      </div>
-      <div>
-        <button onClick={() => setMode('multiplayer')} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">Multiplayer</button>
-        <button onClick={() => setMode('ai')} className="px-4 py-2 bg-green-500 text-white rounded">AI Mode</button>
       </div>
 
       {/* 🪵 Board Container */}
