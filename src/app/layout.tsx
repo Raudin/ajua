@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Press_Start_2P, Orbitron } from "next/font/google";
+import { NavBar } from '../components/NavBar';
 import "./globals.css";
 
 const pressStart2P = Press_Start_2P({
@@ -27,7 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${pressStart2P.variable} ${orbitron.variable} antialiased`}>
-        {children}
+        <NavBar />
+        <div className="pt-20">{children}</div>
       </body>
     </html>
   );
