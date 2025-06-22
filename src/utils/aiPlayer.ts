@@ -47,12 +47,11 @@ function simulateMove(state: GameState, holeIndex: number): GameState {
   if (holeIndex < playerHoles[0] || holeIndex > playerHoles[1] || state.holes[holeIndex] === 0) {
     return state;
   }
-
   let newHoles = [...state.holes];
-  let newBanks = [...state.banks];
-  let pebbles = newHoles[holeIndex];
+  const newBanks = [...state.banks];
+  const pebbles = newHoles[holeIndex];
   newHoles[holeIndex] = 0;
-  let current = holeIndex;
+  let current: number | string = holeIndex;
 
   // Helper function to get next position (same as in gameReducer)
   function getNextPosition(current: number | string, player: number): number | string {
@@ -71,31 +70,33 @@ function simulateMove(state: GameState, holeIndex: number): GameState {
 
   // Sowing pebbles
   for (let i = 0; i < pebbles; i++) {
-    current = getNextPosition(current, player) as number;
-    if (current === 'bank' + player) {
-      newBanks[player]++;
-    } else {
-      newHoles[current]++;
-    }
+  current = getNextPosition(current, player);
+  if (typeof current === 'string' && current === 'bank' + player) {
+    newBanks[player]++;
+  } else {
+    newHoles[current as number]++;
   }
+}
 
-  let nextPlayer = player === 0 ? 1 : 0;
-  let newStatus = `Player ${nextPlayer + 1}'s turn`;
+let nextPlayer = player === 0 ? 1 : 0;
+let newStatus = `Player ${nextPlayer + 1}'s turn`;
 
-  // Check if last pebble landed in player's bank (play again)
-  if (current === 'bank' + player) {
-    nextPlayer = player;
-    newStatus = `Player ${player + 1}'s turn (again)`;
+// Check if last pebble landed in player's bank
+if (typeof current === 'string' && current === 'bank' + player) {
+  nextPlayer = player;
+  newStatus = `Player ${player + 1}'s turn (again)`;
+}
+
+// Check for capture
+if (!(typeof current === 'string' && (current === 'bank' + player || current === 'bank' + (1 - player)))) {
+  const isOpponentHole = player === 0
+    ? (typeof current === 'number' && current >= 8)
+    : (typeof current === 'number' && current <= 7);
+  if (isOpponentHole && (newHoles[current as number] === 2 || newHoles[current as number] === 3)) {
+    newBanks[player] += newHoles[current as number];
+    newHoles[current as number] = 0;
   }
-
-  // Check for capture
-  if (current !== 'bank' + player && current !== 'bank' + (1 - player)) {
-    const isOpponentHole = player === 0 ? current >= 8 : current <= 7;
-    if (isOpponentHole && (newHoles[current] === 2 || newHoles[current] === 3)) {
-      newBanks[player] += newHoles[current];
-      newHoles[current] = 0;
-    }
-  }
+}
 
   // Check game end
   const player0Empty = newHoles.slice(0, 8).every(h => h === 0);
@@ -111,7 +112,7 @@ function simulateMove(state: GameState, holeIndex: number): GameState {
     return {
       ...state,
       holes: newHoles,
-      banks: newBanks,
+      banks: [newBanks[0], newBanks[1]],
       gameOver: true,
       winner,
       status: winner !== null ? `Player ${winner + 1} wins!` : "It's a tie!",
@@ -122,7 +123,7 @@ function simulateMove(state: GameState, holeIndex: number): GameState {
   return {
     ...state,
     holes: newHoles,
-    banks: newBanks,
+    banks: [newBanks[0], newBanks[1]],
     currentPlayer: nextPlayer,
     status: newStatus
   };
