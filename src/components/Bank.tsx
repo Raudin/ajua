@@ -15,7 +15,7 @@ export const Bank: React.FC<BankProps> = ({ pebbles, player }) => {
       <div>Player {player + 1}</div>
       <div className="flex flex-wrap items-center justify-center flex-grow">
         {Array.from({ length: pebbles }).map((_, i) => (
-          <Pebble key={i} />
+          <Pebble key={i} gradient="from-amber-400 to-amber-700" offsetX={0} offsetY={0} />
         ))}
       </div>
       <div>Score: {pebbles}</div>
